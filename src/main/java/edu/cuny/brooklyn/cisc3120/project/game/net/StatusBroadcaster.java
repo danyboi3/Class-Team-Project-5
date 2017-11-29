@@ -1,5 +1,10 @@
 package edu.cuny.brooklyn.cisc3120.project.game.net;
 
+import javafx.scene.Node;
+import javafx.scene.control.Control;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +29,11 @@ public class StatusBroadcaster {
 	private DatagramSocket socket;
 	private byte[] buf;
 	private DatagramPacket packet;
-
+	private VBox playersList;
 	private int tcpPort;
 
-	public StatusBroadcaster() throws IOException {
+	public StatusBroadcaster(VBox playersList) throws IOException {
+		this.playersList = playersList;
 		timer = new Timer(TIMER_NAME);
 		socket = new DatagramSocket();
 		socket.setBroadcast(true);
@@ -51,7 +57,61 @@ public class StatusBroadcaster {
 		LOGGER.debug("closing the UDP broadcaster.");
 	}
 
-	public void start() {
+	public void start() throws IOException, InterruptedException {
+		try {
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
+			while (interfaces.hasMoreElements()) {
+				for (InterfaceAddress networkInterface : interfaces.nextElement().getInterfaceAddresses()) {
+					Thread thread = new Thread(() -> {
+						DatagramSocket socket = null;
+						try {
+							socket = new DatagramSocket(BROADCAST_UDP_PORT, networkInterface.getAddress());
+							socket.setBroadcast(true);
+						}catch(IOException e){
+							e.printStackTrace();
+						}
+
+						while (true) {
+							byte[] recvBuf = new byte[15000];
+							DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
+							try {
+								if (socket != null) {
+									socket.receive(packet);
+
+									String message = packet.getAddress().toString() + ":" + packet.getPort();
+
+									LOGGER.debug(message);
+
+									boolean found = false;
+									for (Object child: ((ListView)playersList.getChildren().get(1)).getItems()) {
+										if(((TextField)child).getText().equals(message)) {
+											found = true;
+										}
+									}
+
+									if(!found) {
+										TextField child = new TextField();
+
+										child.setText(message);
+										((ListView)playersList.getChildren().get(1)).getItems().add(child);
+									}
+								} else {
+									break;
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					});
+
+					thread.start();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		task = new TimerTask() {
 			@Override
 			public void run() {

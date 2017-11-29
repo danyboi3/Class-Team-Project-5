@@ -80,13 +80,13 @@ public class GameController {
 	}
 
 	@FXML
-	void initialize() throws IOException, URISyntaxException {
+	void initialize() throws IOException, URISyntaxException, InterruptedException {
 		LOGGER.debug("Initializing GameController.");
 		setWeaponDisable(true);
 		initializeI18n();
 		gameStatTableView.setVisible(false);
 		playersOnLineVbox.setVisible(false);
-		statusBroadCaster = new StatusBroadcaster();
+		statusBroadCaster = new StatusBroadcaster(playersOnLineVbox);
 		statusBroadCaster.start();
 	}
 
