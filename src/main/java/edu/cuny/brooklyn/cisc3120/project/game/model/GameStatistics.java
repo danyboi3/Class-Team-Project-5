@@ -1,130 +1,131 @@
 package edu.cuny.brooklyn.cisc3120.project.game.model;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import edu.cuny.brooklyn.cisc3120.project.game.utils.I18n;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class GameStatistics {
-    private int numOfTargetsShot;
-    private int numOfShotsFired;
-    private int numOfTargetsMade;
-    private int numOfRoundsWon;
-    private int numOfRoundsPlayed;
-    private double accuracy;
-    
-    public GameStatistics() {
-        numOfTargetsShot = 0;
-        numOfShotsFired = 0;
-        numOfTargetsMade = 0;
-        numOfRoundsWon = 0;
-        numOfRoundsPlayed = 0;
-        accuracy = 0;
-    }
+	private int numOfTargetsShot;
+	private int numOfShotsFired;
+	private int numOfTargetsMade;
+	private int numberOfGuesses;
+	private double accuracy;
 
-    public int getNumOfTargetsShot() {
-        return numOfTargetsShot;
-    }
+	public GameStatistics() {
+		numOfTargetsShot = 0;
+		numOfShotsFired = 0;
+		numOfTargetsMade = 0;
+		numberOfGuesses = 0;
+		accuracy = 0;
+	}
 
-    public void setNumOfTargetsShot(int numOfTargetsShot) {
-        this.numOfTargetsShot = numOfTargetsShot;
-    }
+	public int getNumberOfGuesses() {
+		return numberOfGuesses;
+	}
 
-    public int getNumOfShotsFired() {
-        return numOfShotsFired;
-    }
+	public void setNumberOfGuesses(int numberOfGuesses) {
+		this.numberOfGuesses = numberOfGuesses;
+	}
 
-    public void setNumOfShotsFired(int numOfShotsFired) {
-        this.numOfShotsFired = numOfShotsFired;
-    }
+	public int getNumOfTargetsShot() {
+		return numOfTargetsShot;
+	}
 
-    public int getNumOfTargetsMade() {
-        return numOfTargetsMade;
-    }
+	public void setNumOfTargetsShot(int numOfTargetsShot) {
+		this.numOfTargetsShot = numOfTargetsShot;
+	}
 
-    public void setNumOfTargetsMade(int numOfTargetsMade) {
-        this.numOfTargetsMade = numOfTargetsMade;
-    }
+	public int getNumOfShotsFired() {
+		return numOfShotsFired;
+	}
 
-    public void updateAccuracy() {
-        if (numOfShotsFired > 0) {
-            accuracy = (double)(numOfTargetsShot) / (double)numOfShotsFired;
-        } else {
-            accuracy = 0.0;
-        }
-    }
-    
-    public double getAccuracy() {
-        return accuracy;
-    }
+	public void setNumOfShotsFired(int numOfShotsFired) {
+		this.numOfShotsFired = numOfShotsFired;
+	}
 
-    public ObservableList<StatNameValue> toObservableList() {
-        List<StatNameValue> listStatistics = new LinkedList<StatNameValue>();
-        listStatistics.add(
-                new StatNameValue(I18n.getBundle().getString("numOfTargetsShot")
-                        , Integer.toString(numOfTargetsShot)));
-        listStatistics.add(
-                new StatNameValue(I18n.getBundle().getString("numOfShotsFired")
-                        , Integer.toString(numOfShotsFired)));
-        listStatistics.add(
-                new StatNameValue(I18n.getBundle().getString("numOfTargetsMade")
-                        , Integer.toString(numOfTargetsMade)));
-        listStatistics.add(
-                new StatNameValue(I18n.getBundle().getString("numOfRoundsWon")
-                        , Integer.toString(numOfRoundsWon)));
-        listStatistics.add(
-                new StatNameValue(I18n.getBundle().getString("numOfRoundsPlayed")
-                        , Integer.toString(numOfRoundsPlayed)));
-        listStatistics.add(
-                new StatNameValue(I18n.getBundle().getString("accuracy")
-                        , String.format("%5.2f%%", accuracy)));
-        return FXCollections.observableList(listStatistics);
-    }
-    
-    public class StatNameValue {
-        public final static String COLUMN_NAME_TITLE = "name";
-        public final static String COLUMN_VALUE_TITLE = "value";
-        
-        private StringProperty name;
-        private StringProperty value;
-        
-        public StatNameValue(String name, String value) {
-            setName(name);
-            setValue(value);
-        }
-        
-        public void setName(String value) {
-            nameProperty().set(value);
-        }
+	public int getNumOfTargetsMade() {
+		return numOfTargetsMade;
+	}
 
-        public String getName() {
-            return nameProperty().get();
-        }
+	public void setNumOfTargetsMade(int numOfTargetsMade) {
+		this.numOfTargetsMade = numOfTargetsMade;
+	}
 
-        public StringProperty nameProperty() {
-            if (name == null)
-                name = new SimpleStringProperty(this, COLUMN_NAME_TITLE);
-            return name;
-        }
+	public void updateAccuracy() {
+		if (numOfShotsFired > 0) {
+			accuracy = (double) (numOfTargetsShot) / (double) numOfShotsFired * 100;
+		} else {
+			accuracy = 0.0;
+		}
+	}
 
+	public double getAccuracy() {
+		return accuracy;
+	}
 
+	public ObservableList<StatNameValue> toObservableList() {
+		List<StatNameValue> listStatistics = new LinkedList<StatNameValue>();
+		listStatistics.add(
+				new StatNameValue(I18n.getBundle().getString("numOfTargetsShot")
+						, Integer.toString(numOfTargetsShot)));
+		listStatistics.add(
+				new StatNameValue(I18n.getBundle().getString("numOfShotsFired")
+						, Integer.toString(numOfShotsFired)));
+		listStatistics.add(
+				new StatNameValue(I18n.getBundle().getString("numOfTargetsMade")
+						, Integer.toString(numOfTargetsMade)));
+		listStatistics.add(
+				new StatNameValue(I18n.getBundle().getString("numberOfGuesses")
+						, Integer.toString(numberOfGuesses)));
+		listStatistics.add(
+				new StatNameValue(I18n.getBundle().getString("accuracy")
+						, String.format("%5.2f%%", accuracy)));
+		return FXCollections.observableList(listStatistics);
+	}
 
-        public void setValue(String value) {
-            valueProperty().set(value);
-        }
+	public class StatNameValue {
+		public final static String COLUMN_NAME_TITLE = "name";
+		public final static String COLUMN_VALUE_TITLE = "value";
 
-        public String getValue() {
-            return valueProperty().get();
-        }
+		private StringProperty name;
+		private StringProperty value;
 
-        public StringProperty valueProperty() {
-            if (value == null)
-                value = new SimpleStringProperty(this, COLUMN_VALUE_TITLE);
-            return value;
-        }
-    }
+		public StatNameValue(String name, String value) {
+			setName(name);
+			setValue(value);
+		}
+
+		public String getName() {
+			return nameProperty().get();
+		}
+
+		public void setName(String value) {
+			nameProperty().set(value);
+		}
+
+		public StringProperty nameProperty() {
+			if (name == null)
+				name = new SimpleStringProperty(this, COLUMN_NAME_TITLE);
+			return name;
+		}
+
+		public String getValue() {
+			return valueProperty().get();
+		}
+
+		public void setValue(String value) {
+			valueProperty().set(value);
+		}
+
+		public StringProperty valueProperty() {
+			if (value == null)
+				value = new SimpleStringProperty(this, COLUMN_VALUE_TITLE);
+			return value;
+		}
+	}
 }
