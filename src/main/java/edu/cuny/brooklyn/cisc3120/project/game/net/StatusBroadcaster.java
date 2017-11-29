@@ -1,7 +1,5 @@
 package edu.cuny.brooklyn.cisc3120.project.game.net;
 
-import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -68,7 +66,7 @@ public class StatusBroadcaster {
 						try {
 							socket = new DatagramSocket(BROADCAST_UDP_PORT, networkInterface.getAddress());
 							socket.setBroadcast(true);
-						}catch(IOException e){
+						} catch (IOException e) {
 							e.printStackTrace();
 						}
 
@@ -84,17 +82,17 @@ public class StatusBroadcaster {
 									LOGGER.debug(message);
 
 									boolean found = false;
-									for (Object child: ((ListView)playersList.getChildren().get(1)).getItems()) {
-										if(((TextField)child).getText().equals(message)) {
+									for (Object child : ((ListView) playersList.getChildren().get(1)).getItems()) {
+										if (((TextField) child).getText().equals(message)) {
 											found = true;
 										}
 									}
 
-									if(!found) {
+									if (!found) {
 										TextField child = new TextField();
 
 										child.setText(message);
-										((ListView)playersList.getChildren().get(1)).getItems().add(child);
+										((ListView) playersList.getChildren().get(1)).getItems().add(child);
 									}
 								} else {
 									break;
